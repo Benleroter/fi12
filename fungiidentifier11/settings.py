@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost','fungi-id.co.uk','www.fungi-id.co.uk','fungiidentifier11.eba-yupcnhd5.eu-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost','fungi-id.co.uk','www.fungi-id.co.uk','fungiidentifier11.eba-yupcnhd5.eu-west-2.elasticbeanstalk.com'.'172.31.12.60']
                                                                                                           
 
 # Application definition
