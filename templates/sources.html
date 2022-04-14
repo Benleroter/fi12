@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+	{% block content %}
+  <h2>List of internet sources used in this app</h2>
+		{% for source in sources %}
+      <article class="media content-section">
+            <h3>
+                    <p class="article-content"> {{ source.Website}} 
+            </h3>
+
+      </article>                  
+		{% endfor %}
+{% endblock content %}
+
+
+
+			

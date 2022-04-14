@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    
+    
+    <div class='detail'>
+    
+    <legend class="sub-content" >Latin synonyms for:-{{object.Fungi}}</legend>
+
+    {% for i in synonyms%}
+        <h4>{{ i.LatinSynonym }}222</h4>
+        <a href="{% url 'latinsynonyms-update' i.id %}">update Latin Synonym</a>
+    {% endfor %}
+
+    </div>
+{% endblock content %}

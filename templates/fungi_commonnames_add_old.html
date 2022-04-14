@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block header %}
+  <h1 style="color:white;">
+    {% if CulinaryRating == "Deadly" or  CulinaryRating == "dangerous" %}
+        <img src= "/media/images/icons8-skull-and-crossbones-48.png"> 
+    {% endif %}
+    {% if user.show.ShowLatinNames %}
+            {{fungi.CommonName}}, <em>{{fungi.LatinName}}</em>, id: {{fungi.id}}
+    {% else %}
+            {{fungi.CommonName}}
+    {% endif %}
+    {{fungi.UKOccurences}}
+    {% if UKOccurences > 0 %}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% endif %}
+
+  </h1>
+{% endblock header %}
+{% block CommonNamesAddblock %}
+
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+     <h3>Common Names</h3>
+    {% for book_form in form.forms %}
+      <hr>
+      <h5>
+        {% if book_form.instance.id %}
+       <div class="sub-content" >
+        <div class="form-row">
+        <div class="form-group col-md-7 mb-0">
+            {{ book_form.AltCommonName|as_crispy_field}}
+        </div>
+        <div class="form-group col-md-1 mb-0">
+            {{ book_form.DELETE|as_crispy_field}}
+        </div>
+  </div>
+        {% else %}
+          {% if form.forms|length > 1 %}
+            Add another Common Name
+          {% else %}
+            Add a Common Name
+          {% endif %}
+        {% endif %}
+      </h5>
+      {% for hidden_field in book_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+       <div class="sub-content" >
+        <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+            {{ book_form.AltCommonName|as_crispy_field}}
+        </div>
+      </div>
+
+    {% endfor %}
+    <hr>
+    <p>
+      <button type="submit" value="Update collection" class="btn btn-outline-info">Update Common Names</button>
+      <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-outline-info">Cancel</a>
+    </p>
+  </form>
+
+{% endblock CommonNamesAddblock %}

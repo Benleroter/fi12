@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}New Fungi{% endblock %}
+
+{% block content %}
+    <div class='detail'>
+      <legend class="sub-content" >New Fungi</legend>
+      <form action="" method="post">
+        {% for hidden_field in form.hidden_fields %}
+          {{ hidden_field.errors }}
+          {{ hidden_field }}
+        {% endfor %}
+        <div class="sub-content" >
+          {% csrf_token %}
+          {{ form|crispy}}
+        </div>
+
+
+        <p class="pt-2">
+            <button type="submit"  class="btn btn-success">Add Fungi</button>
+            <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-outline-info">Cancel</a>
+        </p>
+      </form>
+    </div>
+
+{% endblock content %}

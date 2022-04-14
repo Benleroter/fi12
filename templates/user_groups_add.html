@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block GroupAddblock %}
+
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+     <h3>Add or delete groups(s) for {{user.username}}</h3>
+    {% for book_form in form.forms %}
+      <hr>
+      <h5>
+        {% if book_form.instance.id %}
+       <div class="sub-content" >
+
+  </div>
+        {% else %}
+          {% if form.forms|length > 1 %}
+            Add another Group
+          {% else %}
+            Add a Group
+          {% endif %}
+        {% endif %}
+      </h5>
+      {% for hidden_field in book_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+      <table>
+        {{ book_form|crispy }}
+      </table>
+    {% endfor %}
+    <hr>
+    <p>
+      <button type="submit" value="Update Groups" class="btn btn-outline-info">Update Groups</button>
+      <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-outline-info">Cancel</a>
+    </p>
+  </form>
+
+{% endblock GroupAddblock %}

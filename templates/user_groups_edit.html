@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block header %}
+{% endblock header %}
+{% block usergroupsblock %}
+
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+    <div class="detail">
+      <h3>
+      <legend class="sub-content" >Show Groups for {{user.username}}</legend>
+     </h3>
+    {% for book_form in form.forms %}
+    
+    <h4>
+        {% if book_form.instance.id %}
+        <div class="sub-content" >
+            {{ book_form|crispy}}
+        </div>
+   
+        {% else %}
+          {% if form.forms|length > 1 %}
+            Add another Group
+          {% else %}
+            Add a Group
+          {% endif %}
+        {% endif %}
+      </h4>
+      {% for hidden_field in book_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+    {% endfor %}
+    <p>
+      <button type="submit"  class="btn btn-outline-info">Update Groups</button>
+      <a href="{% url 'usersettings:user_group_add' object.id %}"  class="btn btn-outline-info">Add/Delete Groups</a>-->
+      <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-outline-info">Cancel</a>
+    </p>
+
+  </div>
+  </form>
+
+{% endblock usergroupsblock %}

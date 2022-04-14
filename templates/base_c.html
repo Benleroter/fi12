@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/main.css' %}">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/styles.css' %}">
+ 
+<body>
+  
+<div class="wrapper hover_collapse">
+  <div class="top_navbar">
+    <!--<div class="logo">Coding<span>Market</span></div>-->
+    <div class="logo">
+      <span>
+    <h2 style="color:black;"> Fungi Finder </h2> 
+      </span>
+    </div>
+
+    <div class="menu">
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+      <div class="profile_wrap">
+        <div class="profile">
+          
+          <span class="name">{{user.username}}</span>
+          <span class="icon">
+            <i class="fas fa-angle-down"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar_inner">
+    <ul>
+      <li>
+        <a href="{% url 'AllFungi-HomePage' %}">
+          <span><img src="/media/images/home-2483.png"></span>
+          <span class="text">Home</span>
+        </a>
+      </li>
+      <li>
+
+      <li>
+        <a href="{% url 'register' %}">
+          <span><img src="/media/images/check-mark-3280.png"></span>
+          <span class="text">Register</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'AllFungiList' %}">
+          <span><img src="/media/images/mushroom-2339.png"></span>
+          <span class="text">Settings</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'search-fungi' %}">
+          <span><img src="/media/images/search-8909.png"></span>
+          <span class="text">Settings</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'profile' %}">
+          <span><img src="/media/images/user-3297.png"></span>
+          <span class="text">Settings</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'Links-Page' %}">
+          <span><img src="/media/images/link-chain-10475.png"></span>
+          <span class="text">Settings</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'usersettings:Filter-HomePage' %}">
+          <span><img src="/media/images/settings-778.png"></span>
+          <span class="text">Settings</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'logout' %}">
+          <span><img src="/media/images/exit-logout-2861.png"></span>
+          <span class="text">Settings</span>
+        </a>
+      </li>
+
+       <li>
+        <a href="{% url 'login' %}">
+          <span><img src="/media/images/house-4280.png"></span>
+          <span class="text">About</span>
+        </a>
+      </li>
+
+       <li>
+        <a href="{% url 'AllFungi-AboutPage' %}">
+          <span><img src="/media/images/information-1154.png"></span>
+          <span class="text">About</span>
+        </a>
+      </li>
+
+    </ul>
+    </div>
+  </div>
+
+  <div class="main_container">
+    <div class="container">
+      <div class="content">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, quos. Molestiae praesentium, labore recusandae aperiam asperiores expedita explicabo possimus minima doloribus consectetur voluptates illo, nobis assumenda perspiciatis quia eveniet illum sequi. Excepturi soluta atque necessitatibus! Eum asperiores quidem voluptas at quos consequuntur illo quibusdam, esse, ab commodi soluta alias, excepturi placeat incidunt vel animi inventore fuga voluptatem libero blanditiis aliquam. Laboriosam in itaque iste magni nemo fuga maxime omnis corporis dolor dolorum! A assumenda distinctio, necessitatibus quasi tenetur non fugit ducimus cum est. Hic, quisquam, facere? Quos tempore incidunt aliquam veniam, quo doloremque, explicabo architecto ex perferendis vero maxime, non!
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+     <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+
+
+
+<!-- <script src= "{% static 'fungi_css/styles.css' %}"></script> -->
+
+</body>
+</html>							

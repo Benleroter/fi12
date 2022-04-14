@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/main.css' %}">
+
+
+ 
+
+ 
+  	{% if title %}
+          <title>Fungi Finder - {{ title }}</title>
+      {% else %}
+          <title>Fungi</title>
+      {% endif %} 
+<style>
+body {background-color:white; padding-top:100px;}>
+</style>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md fixed-top navbar-custom">
+      <!--<nav class="navbar navbar-expand-md  navbar-custom fixed-top">-->
+          <!-- Navbar Left Side -->
+        <div class="topnav">
+            <h1 style="color:black;"> {{user.username}} </h1> 
+        </div>   
+      <!--<nav class="navbar navbar-expand-md navbar-custom  fixed-top">-->
+        <div class="container">
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+            <div  class="text-white-90">
+                            {% block header %}{% endblock header %}
+ 
+
+            <!-- Navbar Right Side -->
+            <!--<div class="navbar-nav">
+
+             {% if user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <a class="nav-item nav-link" href="{% url 'admin:index' %}">Admin</a>                    
+                {% endif %}
+                {% if user.username == 'GuestUser' %}
+                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                {% endif %}
+                <a class="nav-item nav-link" href="{% url 'AllFungi-HomePage' %}"><img src="/media/images/home-2483.png"></a>
+                <a class="nav-item nav-link color:black" href="{% url 'profile' %}">Profile</a>
+                <a class="nav-item nav-link" href="{% url 'AllFungiList' %}">Fungi List</a>
+                <a class="nav-item nav-link" href="{% url 'search-fungi' %}"><img src="/media/images/search-8909.png"></a>
+                <a class="nav-item nav-link" href="{% url 'AllFungi-AboutPage' %}">About</a>
+                <a class="nav-item nav-link" href="{% url 'Links-Page' %}">Links</a>
+                <a class="nav-item nav-link" href="{% url 'usersettings:Filter-HomePage' %}"><img src="/media/images/settings-778.png"></a>
+                <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{% url 'AllFungi-HomePage' %}">Home</a>
+                <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                <a class="nav-item nav-link" href="{% url 'AllFungiList' %}">Fungi List</a>
+                <a class="nav-item nav-link" href="{% url 'AllFungi-AboutPage' %}">About</a>
+                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+              {% endif %}
+            </div>  
+            -->          
+
+          </div>
+        </div>
+      </nav>
+    </header>
+        <div class="col-md-4">
+ <div class="vertical-menu">
+      {% if request.user.is_superuser %}
+          <p><a href="{% url 'admin:index' %}"><img src="/media/images/skill-8807.png"> Admin</a></p>
+      {% endif %}
+          <p><a href="{% url 'AllFungi-HomePage' %}"><img src="/media/images/home-2483.png"> Home</a></p>
+          <p><a href="{% url 'search-fungi' %}"><img src="/media/images/search-8909.png"> Search</a></p>
+          <p><a href="{% url 'usersettings:Filter-HomePage' %}"><img src="/media/images/settings-778.png"> User settings</a></p>
+          <p><a href="{% url 'Links-Page' %}"><img src="/media/images/link-chain-10475.png"> Links</a></p>
+          <p><a href="{% url 'profile' %}"><img src="/media/images/user-3297.png"> User profile</a></p>
+          <p><a href="{% url 'AllFungiList' %}"><img src="/media/images/mushroom-2339.png"> All Fungi</a></p>
+          <p><a href="{% url 'logout' %}"><img src="/media/images/exit-logout-2861.png"> Logout</a></p>
+          <p><a href="{% url 'login' %}"><img src="/media/images/house-4280.png"> Login</a></p>
+          <p><a href="{% url 'AllFungi-AboutPage' %}"><img src="/media/images/information-1154.png"> About</a></p>
+      {% if user.username == 'GuestUser' %}
+          <p><a href="{% url 'register' %}"><img src="/media/images/check-mark-3280.png"> Register</a></p> 
+      {% endif %}
+</div> 
+</div>
+
+
+    <main role="main" class="container">    
+      <div class="row">
+        <div class="col-md-8">
+            {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }}"></div>
+                {% endfor %}
+            {% endif %}
+            
+          {% block content %}{% endblock content %}
+          {% block filters %}{% endblock filters %}
+          {% block filterSettingsBlock %}{% endblock filterSettingsBlock %}
+          {% block search_results %}{% endblock search_results %}
+          {% block search2 %}{% endblock search2 %}
+
+        </div>     
+
+        <div class="col-md-4">
+          <div class="content-section-nb">           
+              {% block Netlinks%}
+              {% endblock Netlinks%} 
+              {% block search %}
+              {% endblock search%}
+          </div>
+          <div>
+              {% block picture %}
+              {% endblock picture%}
+           </div> 
+        </div>
+
+       </div>
+    </main>
+
+
+
+
+     <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>							

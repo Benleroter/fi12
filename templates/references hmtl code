@@ -1,0 +1,57 @@
+                        <div class="media content-subsection2" >
+                            <article>
+                                <h3>
+                                  Classification: 
+                                    {% for i in ClassificationSourcesList %}
+                                        {% if i.ClassificationSourcesList != "NoData"%}
+                                            <sup><a href={{i}} target="_blank">[{{forloop.counter}}]</a></sup>
+                                        {% endif %}  
+                                    {% endfor %}
+                                </h3>
+                            </article>                   
+                        </div>
+
+
+
+                        <div class="media content-subsection2" >
+                          <article>
+                            <h3>
+                                Fruiting body (Cap/Pileus):  
+                                      {% for i in FruitingBodySourcesList %}
+                                            {% if i.FruitingBodySourcesList != "NoData"%}
+                                              <sup><a href={{i}} target="_blank">[{{forloop.counter}}]</a></sup>
+                                            {% endif %}  
+                                      {% endfor %}
+                            </h3>
+                          </article>  
+                        </div>  
+HabitatSourcesList
+
+                        <div class="media content-subsection2" >
+                          <article>
+                            <h3>
+                                Fruiting body (Cap/Pileus):  
+                                      {% for i in HabitatSourcesList %}
+                                            {% if i.HabitatSourcesList != "NoData"%}
+                                              <sup><a href={{i}} target="_blank">[{{forloop.counter}}]</a></sup>
+                                            {% endif %}  
+                                      {% endfor %}
+                            </h3>
+                          </article>  
+                        </div>  
+
+
+
+
+                        <div class="media content-subsection2" >
+                          <article>
+                            <h3>
+                                Latin Synonyms:  
+                                      {% for i in LatinSynonymsDetailSources %}
+                                            {% if i.LatinSynonymsDetailSources != "NoData"%}
+                                              <sup><a href={{i}} target="_blank">[{{forloop.counter}}]</a></sup>
+                                            {% endif %}  
+                                      {% endfor %}
+                            </h3>
+                          </article>  
+                        </div>

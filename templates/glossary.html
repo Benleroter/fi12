@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+        {% block content %}
+        <div class="detail">
+              <h2>
+              <legend class="sub-content" >Glossary</legend>
+             </h2>
+
+            {% for term in Glossary %}
+             <div class="sub-content" >
+                <h3><p>{{ term.Term}}:</p></h3>
+                <h4><p>{{ term.Meaning}}</p></h4>
+                <h4><a href={{term.Source}} target="_blank">Source</a></h4>
+            </div>
+            {% endfor %}     
+        </div>
+
+{% endblock content %}
+
+
+
+			

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+	{% block content %}
+		<h2>{{fungicount}} records, {{ResultText}}</h2>
+		<!--<img src= "/media/images/cep.jpg" alt="default.jpg"/> -->
+		{% for fungi in fungis %}
+        <div class="detail-9">
+            <h3>
+              {% if user.show.ShowLatinNames %}
+                  <a href="{% url 'FungiDetail-Page' fungi.id %}" >{{ fungi.CommonName}} - <em>{{ fungi.LatinName}}</em> - id:{{ fungi.id }}</a>
+                  <h5>Group: {{fungi.Group}}</h5>
+              {% else%}
+                  <a href="{% url 'FungiDetail-Page' fungi.id %}" >{{ fungi.CommonName}} - id:{{ fungi.id }}</a>
+                   Group: {{fungi.Group}}
+              {% endif %}
+            </h3>
+    </div>
+        
+              
+		{% endfor %}
+{% endblock content %}
+
+
+
+			

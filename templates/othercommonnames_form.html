@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    
+    
+    <div class='detail'>
+    
+    <legend class="sub-content" >Other common names for:-{{object.Fungi}}</legend>
+      <form method="POST">
+        <div class="sub-content" >
+          {% csrf_token %}
+          {{ form|crispy }}
+          
+              <button class="btn btn-outline-info" type="submit">Save Common Names</button>
+          </div>
+      </form>
+    </div>
+{% endblock content %}

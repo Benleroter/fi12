@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block header %}
+  <h1 style="color:white;">
+    {% if CulinaryRating == "Deadly" or  CulinaryRating == "dangerous" %}
+        <img src= "/media/images/icons8-skull-and-crossbones-48.png"> 
+    {% endif %}
+    {% if user.show.ShowLatinNames %}
+            {{fungi.CommonName}}, <em>{{fungi.LatinName}}</em>, id: {{fungi.id}}
+    {% else %}
+            {{fungi.CommonName}}
+    {% endif %}
+    {{fungi.UKOccurences}}
+    {% if UKOccurences > 0 %}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% endif %}
+
+  </h1>
+{% endblock header %}
+{% block LatinSynonymsAddblock %}
+
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+    <div class="detail">
+     <legend class="sub-content" >Latin Synonyms - add/delete</legend>
+    {% for latinsynonymform in form.forms %} 
+      <hr>
+      <h5>
+        {% if latinsynonymform.instance.id %}
+
+        {% else %}
+          {% if form.forms|length > 1 %}
+            Add another Latin Synonym
+          {% else %}
+            Add a Latin Synonym
+          {% endif %}
+        {% endif %}
+      </h5>
+      {% for hidden_field in book_form.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+      <div class="sub-content" >
+        {{ latinsynonymform|crispy }}
+      </div>
+    {% endfor %}
+    <hr>
+     <div class="sub-content" >
+    <p>
+      <button type="submit" value="Update Latin Synonyms" class="btn btn-success">Update Latin Synonyms</button>
+      <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-success">Cancel</a>
+    </p>
+  </div>
+  </form>
+</div>
+
+{% endblock LatinSynonymsAddblock %}
