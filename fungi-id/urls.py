@@ -1,4 +1,4 @@
-"""fungiidentifier11 URL Configuration
+"""fungi-id URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -32,7 +32,7 @@ from usersettings.views import (EditFilter)
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 
-app_name = 'fungiidentifier11'
+app_name = 'fungi-id'
 
 urlpatterns = [
 
