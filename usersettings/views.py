@@ -109,6 +109,7 @@ class SearchFieldsEdit(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	'MonthFound',
 	'HabitatPh',
 	'HabitatSubstrate',
+	'HabitatEnvironment',
 	'HabitatSoil',
 	#'fbType',
 	'CapColour',

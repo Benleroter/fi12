@@ -6,11 +6,18 @@
         <div class="detail-9">
             <h3>
               {% if user.show.ShowLatinNames %}
-                  <a href="{% url 'FungiDetail-Page' fungi.id %}" >{{ fungi.CommonName}} - <em>{{ fungi.LatinName}}</em> - id:{{ fungi.id }}</a>
-                  <h5>Group: {{fungi.Group}}</h5>
+
+                  {%  if fungi.CommonName == 'Common Name' %}
+                          <a href="{% url 'FungiDetail-Page' fungi.id %}" ><em>{{ fungi.LatinName}}</em> - id:{{ fungi.id }}</a>
+                      <h6>Group: {{fungi.Group}}</h6>
+                  {% else %}
+                      <a href="{% url 'FungiDetail-Page' fungi.id %}" >{{ fungi.CommonName}} - <em>{{ fungi.LatinName}}</em> - id:{{ fungi.id }}</a>
+                      <h6>Group: {{fungi.Group}}</h6>
+                  {%  endif %}
+
               {% else%}
                   <a href="{% url 'FungiDetail-Page' fungi.id %}" >{{ fungi.CommonName}} - id:{{ fungi.id }}</a>
-                   Group: {{fungi.Group}}
+                  <h6>Group: {{fungi.Group}}</h6>
               {% endif %}
             </h3>
     </div>

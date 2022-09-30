@@ -294,8 +294,18 @@ body{
   margin-bottom: 20px;
 }
 
+.content-section-orange {
+  background: #ffb84d;
+  padding: 10px 20px;
+  border: 1px solid #006600;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+
+
 .content-section-white {
-  background: #ccff33;
+  background: #ffb84d;
   padding: 10px 20px;
   #border: 1px solid #006600;
   border-radius: 3px;

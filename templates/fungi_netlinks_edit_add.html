@@ -10,9 +10,8 @@
     {% else %}
             {{fungi.CommonName}}
     {% endif %}
-    {{fungi.UKOccurences}}
-    {% if UKOccurences > 0 %}
-        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% if fungi.UKSpecies == "Yes"%}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png">
     {% endif %}
 
   </h1>

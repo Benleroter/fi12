@@ -10,9 +10,8 @@
     {% else %}
             {{fungi.CommonName}}
     {% endif %}
-    {{fungi.UKOccurences}}
-    {% if UKOccurences > 0 %}
-        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% if fungi.UKSpecies == "Yes"%}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png">
     {% endif %}
 
   </h1>
@@ -32,14 +31,14 @@
     {{ form.non_form_errors }}
     <div class="detail">
       <h3>
-      <legend class="sub-content" >Status- edit mode</legend>
+      <legend class="sub-content" >Status - edit mode</legend>
      </h3>
-    {% for book_form in form.forms %}
+    {% for status_edit_form in form.forms %}
     
       <h4>
-       {% if book_form.instance.id %}
+       {% if status_edit_form.instance.id %}
        <div class="sub-content" >
-        {{ book_form|crispy}}
+        {{ status_edit_form|crispy}}
   </div>
    
         {% else %}
@@ -50,7 +49,7 @@
           {% endif %}
         {% endif %}
       </h4>
-      {% for hidden_field in book_form.hidden_fields %}
+      {% for hidden_field in status_form.hidden_fields %}
         {{ hidden_field.errors }}
       {% endfor %}
     {% endfor %}

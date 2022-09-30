@@ -10,12 +10,18 @@ def RunSearch(QParams):
 	QueryComponents = {}
 	QCList= []
 	ResultsList = []
+	ResultsList2 = []
+	SynonymList = []
+	SynonymList2 = []
+
 	SearchModels =[]
 	SearchTermsCount = 0
 	Matches = []
 
 	for p in QParams:
 		SearchTermsCount += 1
+
+	print('QParams-runsearch', QParams)
 
 	for i in QParams:
 		if i == 'CommonName':
@@ -28,20 +34,47 @@ def RunSearch(QParams):
 			QCList.append(CommonNameDict)
 			name_list = CommonNameDict['model'].objects.filter(Q(**{CommonNameDict['column']+CommonNameDict['qstr'] :CommonNameDict['SearchTerm']}))
 			for i in name_list:
-				print('CommonNameDict',CommonNameDict)
-				print('CommonNameDict-i',i)
+				#print('CommonNameDict',CommonNameDict)
+				#print('CommonNameDict-i',i)
 				ResultsList.append(i.id)	
 
 		elif i =="LatinName":
 			LatinNameDict = {}
-			LatinNameDict['SearchTerm'] = QParams[i]
+			SearchTerm = QParams[i]
 			LatinNameDict['table'] = 'Fungi'
 			LatinNameDict['column'] = 'LatinName'
 			LatinNameDict['qstr'] = '__icontains'
 			LatinNameDict['model'] = apps.get_model(app_label='fungi', model_name='Fungi')
-			LatinName_list = LatinNameDict['model'].objects.filter(Q(**{LatinNameDict['column']+LatinNameDict['qstr'] :LatinNameDict['SearchTerm']}))
+			LatinName_list = LatinNameDict['model'].objects.filter(Q(**{LatinNameDict['column']+LatinNameDict['qstr'] :SearchTerm}))
 			for i in LatinName_list:
-				ResultsList.append(i.id)			
+				ResultsList.append(i.id)
+			#print('results:::', ResultsList)
+			LatinSynonymsDict = {}
+			LatinSynonymsDict['table'] = 'LatinSynonyms'
+			LatinSynonymsDict['column'] = 'LatinSynonym'
+			LatinSynonymsDict['qstr'] = '__icontains'
+			LatinSynonymsDict['model'] = apps.get_model(app_label='fungi', model_name=LatinSynonymsDict['table'])
+			LatinSynonyms_list = LatinSynonymsDict['model'].objects.filter(Q(**{LatinSynonymsDict['column'] + LatinSynonymsDict['qstr']: SearchTerm}))
+			for i in LatinSynonyms_list:
+				if  i.Fungi_id not in ResultsList:
+					ResultsList.append(i.Fungi_id)
+					SynonymList.append(i.Fungi_id)
+				#print('results2:::', ResultsList)
+			#print('RESULTS', ResultsList)
+			#print('SYNONYMS', SynonymList)
+
+		elif i == "LatinSynonyms":
+			LatinSynonymsDict = {}
+			LatinSynonymsDict['SearchTerm'] = QParams[i]
+			LatinSynonymsDict['table'] = 'LatinSynonyms'
+			LatinSynonymsDict['column'] = 'LatinSynonym'
+			LatinSynonymsDict['qstr'] = '__icontains'
+			LatinSynonymsDict['model'] = apps.get_model(app_label='fungi', model_name=LatinSynonymsDict['table'])
+			LatinSynonyms_list = LatinSynonymsDict['model'].objects.filter(Q(**{LatinSynonymsDict['column']+LatinSynonymsDict['qstr'] :LatinSynonymsDict['SearchTerm']}))
+			print('LatinSynonyms_list', LatinSynonyms_list)
+			for i in LatinSynonyms_list:
+				ResultsList.append(i.Fungi_id)
+				SynonymList.append(i.Fungi_id)
 
 		elif i =="Group":
 			GroupDict = {}
@@ -94,13 +127,22 @@ def RunSearch(QParams):
 			HabitatSubstrateDict = {}
 			HabitatSubstrateDict['SearchTerm'] = QParams[i]
 			HabitatSubstrateDict['table'] = 'Habitat'
-			HabitatSubstrateDict['column'] = 'HabitatSubstrate'
+			HabitatSubstrateDict['column'] = 'Substrate'
 			HabitatSubstrateDict['qstr'] = '__icontains'
 			HabitatSubstrateDict['model'] = apps.get_model(app_label='fungi', model_name='Habitat')
 			HabitatSubstrateDict = HabitatSubstrateDict['model'].objects.filter(Q(**{HabitatSubstrateDict['column']+HabitatSubstrateDict['qstr'] :HabitatSubstrateDict['SearchTerm']}))
 			for i in HabitatSubstrateDict:
 				ResultsList.append(i.Fungi_id)	
 
+		elif i =="HabitatEnvironment":
+			HabitatEnvironmentDict['SearchTerm'] = QParams[i]
+			HabitatEnvironmentDict['table'] = 'Habitat'
+			HabitatEnvironmentDict['column'] = 'Environment'
+			HabitatEnvironmentDict['qstr'] = '__icontains'
+			HabitatEnvironmentDict['model'] = apps.get_model(app_label='fungi', model_name='Habitat')
+			HabitatEnvironmentDict = HabitatEnvironmentDict['model'].objects.filter(Q(**{HabitatEnvironmentDict['column']+HabitatEnvironmentDict['qstr'] :HabitatEnvironmentDict['SearchTerm']}))
+			for i in HabitatEnvironmentDict:
+				ResultsList.append(i.Fungi_id)
 
 		elif i =="Season":
 			SeasonDict = {}
@@ -131,7 +173,7 @@ def RunSearch(QParams):
 			CapShapeDict = {}
 			CapShapeDict['SearchTerm'] = QParams[i]
 			CapShapeDict['table'] = 'FruitingBody'
-			CapShapeDict['column'] = 'ShapeDescription'
+			CapShapeDict['column'] = 'Shape'
 			CapShapeDict['qstr'] = '__icontains'
 			CapShapeDict['model'] = apps.get_model(app_label='fungi', model_name=CapShapeDict['table'])
 			CapShape_list = CapShapeDict['model'].objects.filter(Q(**{CapShapeDict['column']+CapShapeDict['qstr'] :CapShapeDict['SearchTerm']}))
@@ -584,18 +626,7 @@ def RunSearch(QParams):
 			OtherCommonNamesDict['model'] = apps.get_model(app_label='fungi', model_name=OtherCommonNamesDict['table'])
 			OtherCommonNames_list = OtherCommonNamesDict['model'].objects.filter(Q(**{OtherCommonNamesDict['column']+OtherCommonNamesDict['qstr'] :OtherCommonNamesDict['SearchTerm']}))
 			for i in OtherCommonNames_list:
-				ResultsList.append(i.Fungi_id)	
-
-		elif i =="LatinSynonyms":
-			LatinSynonymsDict = {}
-			LatinSynonymsDict['SearchTerm'] = QParams[i]
-			LatinSynonymsDict['table'] = 'LatinSynonyms'
-			LatinSynonymsDict['column'] = 'LatinSynonym'
-			LatinSynonymsDict['qstr'] = '__icontains'
-			LatinSynonymsDict['model'] = apps.get_model(app_label='fungi', model_name=LatinSynonymsDict['table'])
-			LatinSynonyms_list = LatinSynonymsDict['model'].objects.filter(Q(**{LatinSynonymsDict['column']+LatinSynonymsDict['qstr'] :LatinSynonymsDict['SearchTerm']}))
-			for i in LatinSynonyms_list:
-				ResultsList.append(i.Fungi_id)	
+				ResultsList.append(i.Fungi_id)
 
 		elif i =="Kingdom":
 			KingdomDict = {}
@@ -752,13 +783,34 @@ def RunSearch(QParams):
 			for i in StatusWhereFound_list:
 				ResultsList.append(i.Fungi_id)	
 
+		#print('ResultsList', ResultsList)
+		#remove duplicate fungi from Results list
+		for i in ResultsList:
+			if i not in ResultsList2:
+				ResultsList2.append(i)
+
+		#print('SynonymList4::::', SynonymList)
+		for i in SynonymList:
+			if i not in SynonymList2:
+				SynonymList2.append(i)
+
+
+		ResultsList = []
+		ResultsList = ResultsList2
+		SynonymList = SynonymList2
+
+		#print('ResultsList3:::', ResultsList)
+		#print('SynonymList3::::', SynonymList)
 
 		FiD = collections.Counter(ResultsList)
+
 		for match, count in sorted(FiD.items()):
 			if count == SearchTermsCount:
 				M = Fungi.objects.get(id= match)
 				Matches.append(M)
 
-			#print('"%s" is repeated %d time%s.' % (match, count, "s" if count > 1 else ""))
+		Matches.sort(key = lambda c:  c.LatinName, reverse=False)
+	    #Matches.sort(key=lambda c: c.CommonName, reverse=False)
+		#print('Matches::', Matches)
 
-	return Matches
+	return (Matches,SynonymList)

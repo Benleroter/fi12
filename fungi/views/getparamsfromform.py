@@ -10,6 +10,11 @@ def GetParamsFromForm(form):
        field_name = 'LatinName'
        if field_name in form.fields:
               QParams["LatinName"] = form.cleaned_data['LatinName']
+              QParams["LatinSynonyms"] = form.cleaned_data['LatinName']
+
+       field_name = 'LatinSynonyms'
+       if field_name in form.fields:
+              QParams["LatinSynonyms"] = form.cleaned_data['LatinSynonyms']
 
        field_name = 'Group'
        if field_name in form.fields:
@@ -27,6 +32,10 @@ def GetParamsFromForm(form):
        field_name = 'HabitatSubstrate'
        if field_name in form.fields:
               QParams["HabitatSubstrate"] = form.cleaned_data['HabitatSubstrate']
+
+       field_name = 'HabitatEnvironment'
+       if field_name in form.fields:
+              QParams["HabitatEnvironment"] = form.cleaned_data['HabitatEnvironment']
 
        field_name = 'HabitatSoil'
        if field_name in form.fields:
@@ -199,10 +208,6 @@ def GetParamsFromForm(form):
        field_name = 'OtherCommonNames'
        if field_name in form.fields:
               QParams["OtherCommonNames"] = form.cleaned_data['OtherCommonNames']
-
-       field_name = 'LatinSynonyms'
-       if field_name in form.fields:
-              QParams["LatinSynonyms"] = form.cleaned_data['LatinSynonyms']
 
        field_name = 'Kingdom'
        if field_name in form.fields:

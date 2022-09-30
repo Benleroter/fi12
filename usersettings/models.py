@@ -99,6 +99,7 @@ class ShowSearchFields(models.Model):
 	HabitatAssociations = models.BooleanField(default=False, verbose_name=  ' _'+'Associated Trees')
 	HabitatPh = models.BooleanField(default=False, verbose_name=  ' _'+'Ph')
 	HabitatSubstrate = models.BooleanField(default=False, verbose_name=  ' _'+'Substrate')
+	HabitatEnvironment = models.BooleanField(default=False, verbose_name=' _' + 'Environment')
 	HabitatSoil = models.BooleanField(default=False, verbose_name=  ' _'+'Soil')
 	MonthFound = models.BooleanField(default=False, verbose_name=  ' _'+'Month found')
 	CapColour = models.BooleanField(default=False, verbose_name=  ' _'+'Colour')

@@ -10,9 +10,8 @@
     {% else %}
             {{fungi.CommonName}}
     {% endif %}
-    {{fungi.UKOccurences}}
-    {% if UKOccurences > 0 %}
-        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% if fungi.UKSpecies == "Yes"%}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png">
     {% endif %}
 
   </h1>
@@ -32,7 +31,7 @@
     {{ form.non_form_errors }}
     <div class="detail">
       <h3>
-      <legend class="sub-content" >Similar Fungi - editfffff</legend>
+      <legend class="sub-content" >Similar Fungi - edit</legend>
      </h3>
     {% for similar in form.forms %}
       <hr>

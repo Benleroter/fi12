@@ -2,17 +2,48 @@
 
 {% block header %}
   <h1 style="color:white;">
-    {% if CulinaryRating == "Deadly" or  CulinaryRating == "Dangerous" %}
-        <img src= "/media/images/icons8-skull-and-crossbones-48.png"> 
+
+    {%  if "Deadly" in CulinaryRating or "deadly" in CulinaryRating %}
+         <img src= "/media/images/icons8-skull-and-crossbones-48-red.png">
+    {%  elif  "Poisonous" in CulinaryRating or  "poisonous" in CulinaryRating %}
+        <img src= "/media/images/icons8-skull-and-crossbones-48.png">
     {% endif %}
-    {% if user.show.ShowLatinNames %}
-            {{object.CommonName}}, <em>{{object.LatinName}}</em>, id: {{object.id}}
-    {% else %}
-            {{object.CommonName}}
+
+      {%  if "Edible" in CulinaryRating %}
+        <img src= "/media/images/icons8-dining-room-64-white-2.png">
     {% endif %}
-    {% if UKOccurences > 0 %}
-        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+
+
+      {%  if "Inedible" in CulinaryRating %}
+        <img src= "/media/images/icons8-dining-room-64-white-5.png">
     {% endif %}
+
+     {%  if "medicinal" in CulinaryRating %}
+        <img src= "/media/images/icons8-medicine-64.png">
+    {% endif %}
+
+
+
+
+
+    {% if object.CommonName == "Common Name" %}
+       <em>{{object.LatinName}}</em>, id: {{object.id}}
+    {% endif %}
+
+     {% if object.CommonName != "Common Name" %}
+        {% if user.show.ShowLatinNames %}
+                {{object.CommonName}}, <em>{{object.LatinName}}</em>, id: {{object.id}}
+        {% else %}
+                {{object.CommonName}}
+        {% endif %}
+    {% endif  %}
+
+    {% if object.UKSpecies == "Yes" %}
+          <img src= "/media/images/pngfind.com-english-flag-png-6458760.png">
+    {% endif %}
+
+
+
 
   </h1>
 {% endblock header %}
@@ -30,7 +61,7 @@
             {% endif %}
         {% endfor %}
     </h5>
-    <a href="{% url 'fungi_netlinks_edit_add' object.id %}" class="btn btn-warning" style="float:left;">Add/Edit Links</a>
+    <a href="{% url 'fungi_netlinks_edit_add' object.id %}" class="btn btn-warning" style="float:left;">Add/Edit/Delete Links</a>
 {% endblock Netlinks%}
 
 {% block picture%}
@@ -39,6 +70,19 @@
 
 {% block content %}
     {% if DataToDisplay %}
+        <!-- Fungi -->
+        {% if request.user.is_superuser %}
+            <div class="detail">
+                <div class="sub-content" >
+                    <a  href="{% url 'fungi_edit' object.id %}" >Edit Fungi details</a>
+                </div>
+            </div>
+        {% endif %}
+
+
+
+
+
         <!-- Habitat --> 
         {% if ShowHabitatFlag == 'Yes' %}
             <div class="detail">
@@ -56,7 +100,7 @@
                 {% endfor %}
                 </h3>
                 <h5>
-                {% if Associations != "NoData" %}
+                {% if Associations != 'NoData' %}
                     <div class="sub-content">
                         <strong>Associations: </strong>
                         {% if not AssociationsLinks%}
@@ -87,6 +131,7 @@
                             {{Soil}}
                         {% else %}
                             {% for key,value in Soil.items %}
+
                                     {% if 'item' in key %}
                                         {{value}}
                                     {% endif %} 
@@ -100,7 +145,7 @@
 
                 {% if Substrate  != "NoData" %}
                     <div class="sub-content" >
-                        <strong>Growing medium: </strong>
+                        <strong>Substrate/Growing medium: </strong>
                         {% if not SubstrateLinks%}
                             {{Substrate}}
                         {% else %}
@@ -116,13 +161,31 @@
                     </div>
                 {% endif %}
 
+                {% if Environment  != "NoData" %}
+                    <div class="sub-content" >
+                        <strong>Environment: </strong>
+                        {% if not EnvironmentLinks%}
+                            {{Environment}}
+                        {% else %}
+                            {% for key,value in Environment.items %}
+                                    {% if 'item' in key %}
+                                        {{value}}
+                                    {% endif %}
+                                    {% if 'link' in key %}
+                                        <a href={{value.0}}>{{value.1}}</a>
+                                    {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+
                 {% if HabitatComments  != "no comments" %}
                     <div class="sub-content" >
                         <strong>Comments: </strong>
                     {% if not HabitatCommentsLinks%}
                         {{HabitatComments}}
                     {% else %}
-
                         {% for key,value in HabitatComments.items %}
                                 {% if 'item' in key %}
                                     {{value}}
@@ -181,13 +244,13 @@
                     </div>
                 {% endif %}
 
-                {% if CapShapeDescription  != "NoData" %}
+                {% if CapShape  != "NoData" %}
                     <div class="sub-content" >
                         <strong>Shape: </strong>
-                        {% if not CapShapeDescriptionLinks%}
-                            {{CapShapeDescription}}
+                        {% if not CapShapeLinks%}
+                            {{CapShape}}
                         {% else %}
-                            {% for key,value in CapShapeDescription.items %}
+                            {% for key,value in CapShape.items %}
                                     {% if 'item' in key %}
                                         {{value}}
                                     {% endif %} 
@@ -216,7 +279,7 @@
                         {% endif %}                    
                     </div>
                 {% endif %}
- 
+                <!--
                 {% if CapRimDescription  != "NoData" %}
                     <div class="sub-content" >
                         <strong>Rim: </strong>
@@ -234,7 +297,7 @@
                         {% endif %}                    
                     </div>
                 {% endif %}
-
+                -->
                 {% if CapTexture  != "NoData" and CapTexture != "Various"%}
                     <div class="sub-content" >
                         <strong>Texture: </strong>
@@ -253,7 +316,7 @@
                     </div>
                 {% endif %} 
 
-
+                <!--
                 {% if CapTextureDescription  != "NoData" %}
                     <div class="sub-content" >
                         <strong>Texture: </strong>
@@ -271,7 +334,7 @@
                         {% endif %}                    
                     </div>
                 {% endif %}
-
+                -->
                 {% if CapBruiseColour  != "NoData" %}
                     <div class="sub-content" >
                         <strong>Bruise colour: </strong>
@@ -648,14 +711,12 @@
         {% if ShowCuisineFlag == 'Yes' %}
             <div class="detail">
                 <h3>
-                Cuisine:
+                Cuisine and uses:
                 {% if request.user.is_superuser %}
                  <a href="{% url 'fungi_refs_edit_add' object.id %}" class="btn btn-warning" style="float:right;">References</a>
                  <a href="{% url 'cuisine-update' object.id %}" class="btn btn-success" style="float:right;">edit Cuisine</a>
                 {% endif %}      
-                {% if CulinaryRating == "Deadly" %}
-                    <img src= "/media/images/skull-and-crossbones_2620.jpg"> 
-                {% endif %}
+
                 {% for i in CuisineSourcesList %}
                     {% if i.CuisineSourcesList != "NoData"%}
                         <sup><a  target="_blank" href={{i}}>[{{forloop.counter}}]</a></sup>
@@ -689,7 +750,21 @@
 
                     {% if CuisineComments  != "no comments" %}
                         <div class="sub-content" >
-                            <strong>Comments: </strong><a>{{ CuisineComments }}</a>
+                            <strong>Comments: </strong>
+
+                        {% if not CuisineCommentsLinks%}
+                            {{ CuisineComments }}
+                        {%  else %}
+
+                            {% for key,value in CuisineComments.items %}
+                                {% if 'item' in key %}
+                                    {{value}}
+                                {% endif %}
+                                {% if 'link' in key %}
+                                    <a href={{value.0}}>{{value.1}}</a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         </div>
                 {% endif %}  
                 </h5>
@@ -901,7 +976,7 @@
                 Other Common Names:  
                 {% if request.user.is_superuser %}
                  <a href="{% url 'fungi_refs_edit_add' object.id %}" class="btn btn-warning" style="float:right;">References</a>
-                 <a href="{% url 'fungi_commonnames_edit_add' fungi.id %}" class="btn btn-success" style="float:right;">kkkedit Common Names</a>
+                 <a href="{% url 'fungi_commonnames_edit_add' fungi.id %}" class="btn btn-success" style="float:right;">edit Common Names</a>
                 {% endif %}      
                 {% for i in OtherCommonNamesSourcesList %}
                     {% if i.OtherCommonNamesSourcesList != "NoData"%}
@@ -949,7 +1024,7 @@
                 {% for i in LatinSynonyms %}
                     {% if i.LatinSynonym != "NoData"%}
                         <div class="sub-content" >
-                            <a>{{ i.LatinSynonym}}</a>
+                            <a>{{ i.LatinSynonym}}:  {{  i.LatinSynonymSource }}</a>
                         </div>
                     {% endif %}  
                 {% endfor %}
@@ -1032,7 +1107,7 @@
         {% if ShowSeasonFlag == 'Yes' %}
             <div class="detail">
                 <h3>
-                Seasons: - for more details click on GBIF
+                Seasons:
                 {% if request.user.is_superuser %}
                  <a href="{% url 'fungi_refs_edit_add' object.id %}" class="btn btn-warning" style="float:right;">References</a>
                  <a href="{% url 'seasons-update' object.id %}" class="btn btn-success" style="float:right;">edit Seasons</a>
@@ -1095,11 +1170,6 @@
                     </div>
                 {% endif %} 
 
-                {% if UKOccurences  != 0 %}
-                    <div class="sub-content" >
-                        <strong>UK Occurences: </strong><a>{{ UKOccurences }}, (source NBN)</a>
-                    </div>
-                {% endif %}
 
                 {% if RecordedInUK  != "NoData" %}
                     <div class="sub-content" >
@@ -1431,11 +1501,12 @@
                 Fungi Comments:
                 {% if request.user.is_superuser %}
                  <a href="{% url 'fungi_refs_edit_add' object.id %}" class="btn btn-warning" style="float:right;">References</a>
-                 <a href="{% url 'fungicomments-update' fungi.id %}" class="btn btn-success" style="float:right;">edit Fungi Comments</a>
+                 <a href="{% url 'fungicomments-update' object.id %}" class="btn btn-success" style="float:right;">edit Fungi Comments</a>
                 {% endif %}      
                 {% for i in FungiCommentsSourcesList %}
                     {% if i.FungiCommentsSourcesList != "NoData"%}
                     <sup><a target="_blank" href={{i}} >[{{forloop.counter}}]</a></sup>
+                    comments here 2
                     {% endif %}  
                 {% endfor %}
                 </h3>

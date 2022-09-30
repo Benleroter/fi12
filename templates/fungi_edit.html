@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block header %}
+  <h1 style="color:white;">
+    {% if CulinaryRating == "Deadly" or  CulinaryRating == "dangerous" %}
+        <img src= "/media/images/icons8-skull-and-crossbones-48.png"> 
+    {% endif %}
+    {% if user.show.ShowLatinNames %}
+            {{fungi.CommonName}}, <em>{{fungi.LatinName}}</em>, id: {{fungi.id}}
+    {% else %}
+            {{fungi.CommonName}}
+    {% endif %}
+
+    {% if fungi.UKSpecies == "Yes"%}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% endif %}
+
+  </h1>
+{% endblock header %}
+
+
+{% block title %}New Fungi{% endblock %}
+
+{% block content %}
+    <div class='detail'>
+      <legend class="sub-content" >Edit Fungi: </legend>
+      <form action="" method="post">
+        {% for hidden_field in form.hidden_fields %}
+          {{ hidden_field.errors }}
+          {{ hidden_field }}
+        {% endfor %}
+        <div class="sub-content" >
+          {% csrf_token %}
+          {{ form|crispy}}
+        </div>
+
+
+        <p class="pt-2">
+            <button type="submit"  class="btn btn-success">Update Fungi</button>
+            <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-outline-info">Cancel</a>
+        </p>
+      </form>
+    </div>
+
+{% endblock content %}

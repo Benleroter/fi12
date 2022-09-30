@@ -56,8 +56,7 @@ class NetLinksAdmin(admin.ModelAdmin):
 class HabitatAdmin(admin.ModelAdmin):
 	search_fields = ("Fungi__CommonName__icontains",)
 	list_per_page = 500
-	list_display = ("Fungi","Associations","Ph","Soil","Substrate")		
-
+	list_display = ("Fungi","Associations","Ph","Soil","Substrate","Environment")
 
 @admin.register(FruitingBody)
 class FruitingBodyAdmin(admin.ModelAdmin):

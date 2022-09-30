@@ -10,9 +10,8 @@
     {% else %}
             {{fungi.CommonName}}
     {% endif %}
-    {{fungi.UKOccurences}}
-    {% if UKOccurences > 0 %}
-        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% if fungi.UKSpecies == "Yes"%}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png">
     {% endif %}
 
   </h1>
@@ -55,7 +54,7 @@
     <hr>
     <div class="sub-content" >
     <p>
-      <button type="submit" value="Update References" class="btn btn-success">Update References</button>
+      <button type="submit" value="Update References" class="btn btn-success">Update References 2</button>
       <a href="{{ fungi.get_absolute_url  }}" role="button" class="btn btn-success">Cancel</a>
     </p>
   </div>

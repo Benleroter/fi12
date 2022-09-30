@@ -99,10 +99,13 @@ urlpatterns = [
     path('glossary/<str:slug>/',ShowGlossaryEntry.as_view(), name='glossary_entry'),
     path('glossary/add', views.GlossaryFormView.as_view(), name='glossary_form'),
 
+
     path('fungi/', views.FungiListView.as_view(), name='list_fungi'),
-    path('fungi/<int:pk>/', views.FungiDetailView.as_view(), name='fungi_detail'),
+    #path('fungi/<int:pk>/', views.FungiEditView.as_view(), name='fungi_edit'),
     
+    #path('fungi/new/', views.FungiCreateView.as_view(), name='new_fungi'),
     path('fungi/new/', views.FungiCreateView.as_view(), name='new_fungi'),
+    path('fungi/<int:pk>/edit', views.FungiEditView.as_view(), name='fungi_edit'),
 
     #path('fruitingbody/<pk>/update/', FruitingBodyUpdate.as_view(), name='fruitingbody-update'),
     #path('habitat/<pk>/update/', HabitatUpdate.as_view(), name='habitat-update'),

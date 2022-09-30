@@ -18,12 +18,13 @@ class FruitingBodyUpdate(UpdateView):
 	model = FruitingBody
 	fields = [
 		"Colour", 
-		"ColourDescription",
-		"ShapeDescription", 
+		#"ColourDescription",
+		#"ShapeDescription",
+		"Shape",
 		"Rim", 
-		"RimDescription", 
+		#"RimDescription",
 		"CapTexture",
-		"CapTextureDescription",
+		#'"CapTextureDescription",
 		"BruiseColour", 
 		"CutColour",
 		"WidthMin",

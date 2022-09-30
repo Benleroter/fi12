@@ -9,14 +9,46 @@ from django.db.models import signals
 #from fungi.views import choices
 
 GillsPresentChoices = [
+	("NoData", "NoData"),
+	("Yes", "Yes"),
+	("No", "No")
+]
+
+UKSpeciesChoices = [
+	("NoData", "NoData"),
+	("Yes", "Yes"),
+	("No", "No")
+]
+
+MacromycetesChoices = [
+	("NoData", "NoData"),
+	("Yes", "Yes"),
+	("No", "No")
+]
+PoresPresentChoices = [
+	("NoData","NoData"),
 	("Yes", "Yes"),
 	("No", "No")
 	]
 
-PoresPresentChoices = [
+RingPresentChoices = [
+	("NoData", "NoData"),
 	("Yes", "Yes"),
 	("No", "No")
 	]
+
+MilkPresentChoices = [
+    ("NoData", "NoData"),
+	("Yes", "Yes"),
+	("No", "No")
+	]
+
+RecordedInUKChoices = [
+    ("NoData", "NoData"),
+	("Yes", "Yes"),
+	("No", "No")
+	]
+
 
 ReferenceSourceDetailChoices = [
 	("Habitat", "Habitat"),
@@ -42,12 +74,13 @@ ReferenceSourceDetailChoices = [
 class Fungi(models.Model):
 	CommonName = models.CharField(max_length=255, blank=False, null=False,default='Common Name')
 	LatinName = models.CharField(max_length=255, blank=False, null=False,default='Latin Name')
-	BMSList = models.CharField(max_length=8,blank=True,null=True, default='BMS')
-	NBNList = models.CharField(max_length=8,blank=True,null=True, default='NBN')
-	GenusEnglish =  models.CharField(max_length=255,blank=True,null=True, default='NoData')
-	GenusLatin =  models.CharField(max_length=255,blank=True,null=True, default='NoData')
-	UKSpecies = models.CharField(max_length=8,blank=True,null=True, default='NoData')
-	Macromycetes = models.CharField(max_length=8,blank=True,null=True, default='NoData')
+	#BMSList = models.CharField(max_length=8,blank=True,null=True, default='BMS')
+	#NBNList = models.CharField(max_length=8,blank=True,null=True, default='NBN')
+	#GenusEnglish =  models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	#GenusLatin =  models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	#UKSpecies = models.CharField(max_length=8,blank=True,null=True, default='NoData')
+	UKSpecies = models.CharField(max_length=20, choices=UKSpeciesChoices, blank=True, null=True, default='Yes', verbose_name='Recorded in UK')
+	Macromycetes = models.CharField(max_length=8, choices=MacromycetesChoices,  blank=True,null=True, default='Yes')
 	Group = models.CharField(max_length=255,blank=True,null=True, default='not assigned')
 	Comments = models.CharField(max_length=1024,blank=True,null=True, default='NoData')
 	slug = models.SlugField(null=True)
@@ -57,7 +90,8 @@ class Fungi(models.Model):
 		db_table = 'Fungi'
 		verbose_name = "Fungi"
 		verbose_name_plural = "Fungi"
-		ordering = ['CommonName']
+		#ordering = ['LatinName']
+
 		app_label  = "fungi"
 
 	def __str__(self):
@@ -81,6 +115,7 @@ class Fungi(models.Model):
 		is_new = not self.pk
 		super().save(*args, **kwargs)
 		if is_new:
+			#print('self.id', self.id)
 			OtherCommonNames.objects.create(Fungi=self)
 			LatinSynonyms.objects.create(Fungi=self)
 			FruitingBody.objects.create(Fungi=self)
@@ -101,7 +136,9 @@ class Fungi(models.Model):
 			DetailSources.objects.create(Fungi=self)
 
 			if not self.slug:
+				#print('not.slug')
 				self.slug = slugify(self.id)
+			#print('self.id', self.id)
 			return super().save(*args, **kwargs)
 
 class DetailSources(models.Model):
@@ -151,8 +188,10 @@ class SimilarFungi(models.Model):
 class LatinSynonyms(models.Model):
 #class OtherLatinNames(models.Model):
 	Fungi = models.ForeignKey(Fungi, max_length=255, blank=False, null=False, on_delete=models.CASCADE, related_name='fungi_latinnname')
+
 	#SourceLinks = models.ForeignKey(DetailSources,max_length=255, blank=True, null=True, on_delete=models.CASCADE, related_name='SourcesLinks_LatinSynonyms')
-	LatinSynonym = models.CharField(max_length=255, blank=True, null=True, verbose_name='', default='NoData')
+	LatinSynonym = models.CharField(max_length=255, blank=True, null=True, verbose_name='Synonym', default='NoData')
+	LatinSynonymSource = models.CharField(max_length=255, blank=True, null=True, verbose_name='Source', default='NoData')
 	slug = models.SlugField(null=True)
 
 	class Meta:
@@ -184,6 +223,8 @@ class FungiComments(models.Model):
 	class Meta:
 		managed = True
 		db_table = 'FungiComments'
+		verbose_name = 'FungiComments'
+		verbose_name_plural = 'FungiComments'
 		ordering = ['Fungi']
 		app_label  = "fungi"
 
@@ -239,6 +280,7 @@ class Habitat(models.Model):
 	Ph = models.CharField(max_length=255,blank=True,null=True, default='NoData')
 	Soil = models.CharField(max_length=255,blank=True,null=True, default='NoData')
 	Substrate = models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	Environment = models.CharField(max_length=255,blank=True,null=True, default='NoData')
 	Comments = models.CharField(max_length=2048, blank=True, null=True, default='no comments')
 	slug = models.SlugField(null=True)
 
@@ -266,17 +308,18 @@ class FruitingBody(models.Model):
 	Fungi = models.ForeignKey(Fungi, max_length=255, blank=False, null=False, on_delete=models.CASCADE, related_name='fungi_fruitingbody')
 	#SourceLinks = models.ForeignKey(DetailSources,max_length=255, blank=True, null=True, on_delete=models.CASCADE, related_name='SourcesLinksUrl_fruitingbody')
 	#DataPresent = models.BooleanField(default=False)
-	Colour  = models.CharField(max_length=255, blank=True, default='NoData', null=True)
-	ColourDescription = models.CharField(max_length=1028, blank=True, default='NoData', null=True)
-	ShapeDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
+	Colour  = models.CharField(max_length=1028, blank=True, default='NoData', null=True)
+	#ColourDescription = models.CharField(max_length=1028, blank=True, default='NoData', null=True)
+	#ShapeDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
+	Shape = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	Rim = models.CharField(max_length=255, blank=True, default='NoData', null=True)
-	RimDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
+	#RimDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	CapTexture= models.CharField(max_length=255, blank=True, default='NoData', null=True)
-	CapTextureDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
+	#CapTextureDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	BruiseColour = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	CutColour = models.CharField(max_length=255, blank=True, default='NoData', null=True)
-	WidthMin = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00, null=True)
-	WidthMax = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00, null=True)
+	WidthMin = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0.00, null=True)
+	WidthMax = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0.00, null=True)
 	Comments = models.CharField(max_length=2048, blank=True, null=True, default='no comments')
 	slug = models.SlugField(null=True)
 	
@@ -306,11 +349,12 @@ class Stipe(models.Model):
 	Colour = models.CharField(max_length=255, blank=True, null=True, default='NoData')
 	BruiseColour = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	CutColour = models.CharField(max_length=255, blank=True, default='NoData', null=True)
-	LengthMin = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00, null=True)
-	LengthMax = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00, null=True)#
-	ThicknessMin = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00, null=True)
-	ThicknessMax = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00, null=True)
+	LengthMin = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0.00, null=True)
+	LengthMax = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0.00, null=True)#
+	ThicknessMin = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0.00, null=True)
+	ThicknessMax = models.DecimalField(max_digits=5, decimal_places=2, blank=True, default=0.00, null=True)
 	ShapeDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
+	Shape = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	ReticulationPresent = models.CharField(max_length=255,blank=True,null=True, default='NoData')
 	ReticulationColour = models.CharField(max_length=255, blank=True, null=True, default='NoData')
 	ReticulationDescription = models.CharField(max_length=2048, blank=True, null=True, default='NoData')	
@@ -318,7 +362,8 @@ class Stipe(models.Model):
 	BaseDescription = models.CharField(max_length=255, blank=True, default='NoData', null=True)
 	Texture = models.CharField(max_length=255,blank=True,null=True, default='NoData')
 	TextureDescription= models.CharField(max_length=255, blank=True, null=True, default='NoData')
-	Ring = models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	#Ring = models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	Ring = models.CharField(max_length=20, choices=RingPresentChoices, blank=True, null=True, default='NoData')
 	RingDescription = models.CharField(max_length=255,blank=True,null=True, default='NoData')
 	slug = models.SlugField(null=True)
 
@@ -361,7 +406,8 @@ class PoresAndTubes(models.Model):
 	TubeColour = models.CharField(max_length=255, blank=True, null=True, default='NoData')
 	TubeShape = models.CharField(max_length=255, blank=True, null=True, default='NoData')
 	TubeBruiseColour = models.CharField(max_length=255, blank=True, null=True, default='NoData')
-	Milk = models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	#Milk = models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	Milk = models.CharField(max_length=20, choices=MilkPresentChoices, blank=True, null=True, default='NoData')
 	Comments = models.CharField(max_length=2048, blank=True, null=True, default='no comments')
 	slug = models.SlugField(null=True)
 
@@ -393,7 +439,7 @@ class Gills(models.Model):
 	CutColour = models.CharField(max_length=255, blank=True, null=True, default='NoData')
 	Attachment = models.CharField(max_length=255, blank=True, null=True, default='NoData')
 	Arrangement = models.CharField(max_length=255, blank=True, null=True, default='NoData')
-	Milk = models.CharField(max_length=255,blank=True,null=True, default='NoData')
+	Milk = models.CharField(max_length=20, choices=MilkPresentChoices, blank=True, null=True, default='NoData')
 	Comments = models.CharField(max_length=2048, blank=True, null=True, default='no comments')
 	slug = models.SlugField(null=True)
 
@@ -474,11 +520,10 @@ class Spores(models.Model):
 	def get_absolute_url(self):
 		return reverse('FungiDetail-Page', kwargs={'slug':self.slug})
 
-
-
 class NetLinks(models.Model):
 	Fungi = models.ForeignKey(Fungi, max_length=255, blank=False, null=False, on_delete=models.CASCADE, related_name='fungi_netlinks')
 	Website = models.CharField(max_length=255, verbose_name='Site Name', blank=True, null=True, default='NoData')
+	#Website = models.CharField(max_length=255, verbose_name='Site Name', choices=LinkChoicesNames(), blank=True, null=True, default='NoData')
 	Websiteurl = models.CharField(max_length=255, verbose_name='URL', blank=True, null=True, default='NoData')
 	OrderToDisplay = models.IntegerField(blank=True, null=True, default=50)
 
@@ -487,7 +532,7 @@ class NetLinks(models.Model):
 		db_table = 'NetLinks'
 		verbose_name = "NetLinks"
 		verbose_name_plural = "NetLinks"
-		ordering = ['Fungi']
+		ordering = ['OrderToDisplay']
 		app_label  = "fungi"
 
 	def __str__(self):
@@ -613,11 +658,11 @@ class Picture(models.Model):
 
 class Status(models.Model):
 	Fungi = models.ForeignKey(Fungi, max_length=255, blank=False, null=False, on_delete=models.CASCADE, related_name='fungi_Status')
-	StatusData = models.CharField(max_length=255,blank=True,null=True, default='NoData')
-	WhereFound = models.CharField(max_length=255,blank=True,null=True, default='NoData')
-	RecordedInUK = models.CharField(max_length=255,blank=True,null=True, default='NoData')
-	UKOccurences = models.CharField(max_length=16, blank=True, null=True, default='0') 
-	StatusComments = models.CharField(max_length=2048, blank=True, null=True, default='no comments') 
+	StatusData = models.CharField(max_length=255,blank=True,null=True, verbose_name='Status', default='NoData')
+	WhereFound = models.CharField(max_length=255,blank=True,null=True,verbose_name='Where found', default='NoData')
+	#RecordedInUK = models.CharField(max_length=255,blank=True,choices=RecordedInUKChoices,null=True, default='NoData')
+	#UKOccurences = models.CharField(max_length=16, blank=True, null=True, default='0')
+	StatusComments = models.CharField(max_length=2048, blank=True, null=True,verbose_name='Comments', default='no comments')
 	slug = models.SlugField(null=True)
 
 	class Meta:
@@ -629,7 +674,7 @@ class Status(models.Model):
 		app_label  = "fungi"
 
 	def __str__(self):
-		return self.Fungi.CommonName+', status: '+self.StatusData+', Mainly found in: '+self.WhereFound+', recorded in UK: '+self.RecordedInUK+' UK:'+self.UKOccurences
+		return self.Fungi.CommonName+', status: '+self.StatusData+', Mainly found in: '+self.WhereFound
 
 	def save(self, *args, **kwargs):
 		if not self.slug:
@@ -655,7 +700,7 @@ class Glossary(models.Model):
 		app_label  = "fungi"
 
 	def __str__(self):
-		return 'Term: '+self.Term+', Meaning: '+self.Meaning
+		return 'Term: '+self.Term+', Meaning: '+self.Meaning+', slug:'+self.slug
 
 	def get_absolute_url(self):
 		return reverse('glossary_entry', kwargs={'slug': self.slug}) # new

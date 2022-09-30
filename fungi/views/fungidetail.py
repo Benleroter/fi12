@@ -11,83 +11,31 @@ from django.contrib.auth.models import User  # AnonymousUser
 # from django.template import Context, Template
 # import collections
 from fungi.views.insertlinks import InsertLinks
-'''
-
-def listofglossaryterms():
-    termlist = []
-    Ts = Glossary.objects.all()
-    print('Ts', Ts)
-    return Ts
-'''
-
-'''
-def create_replacement(matchobj):
-    print('matchobj',matchobj)
-    if matchobj.group(1): # if there's http(s)://, keep it
-        full_url = matchobj.group(0)
-        print('full_url', full_url)
-    else: # otherwise prepend it. it would be a long discussion if https or http. decide.
-        full_url = "http://" + matchobj.group(2)
-
-    tag = soup.new_tag("a", href=full_url)
-    tag.string = matchobj.group(2)
-    return str(tag)
-
-    # compile the pattern beforehand, as it's going to be used many times
-    r = re.compile(r"(href?://)?((?:[\w-]+\.)+[a-z]+(?:/\S*?)?)(?=[\.,)]?(?:\s|$))")
-'''
-'''
-def wrap_plaintext_links(bs_tag):
-    for element in bs_tag:#.children:
-        print('element;', element)
-        
-        if type(element) == NavigableString:
-            print('element:::::::::', element)
-        
-            replaced = r.sub(create_replacement, str(element))
-            element.replaceWith(BeautifulSoup(replaced)) # make it a Soup so that the tags aren't escaped
-        elif element != "a":
-            wrap_plaintext_links(element)
-        
-#wrap_plaintext_links(soup)
-'''
 
 
 class FungiDetail(DetailView):
     model = Fungi
     template_name = 'detail.html'
-    # slug_field = 'Fungi_id'
-    # slug_url_kwarg = 'Fungi_id'
-    # context_object_name = 'funRetrievedObjectsetail'
+    paginate_by = 1
 
     def get_context_data(self, **kwargs):
         context = super(FungiDetail, self).get_context_data(**kwargs)
         CurrentFungi = context['fungi']
-        CurrentFungi_id = context['fungi'].id
-        print('CurrentFungi_id', CurrentFungi_id)
-        print('CurrentFungi:', CurrentFungi)
-        NoDataToDisplay = True
 
         def DataPresent(Fungi_attribute):
-            #print('Fungi_attribute:', Fungi_attribute )
-            count =0
-            context_var =[f for f in Fungi_attribute._meta.get_fields() if f.name not in  ['id', 'DataPresent', 'Fungi', 'slug']]
+            count = 0
+            DP = 'True'
+            context_var = [f for f in Fungi_attribute._meta.get_fields() if f.name not in ['id', 'DataPresent', 'Fungi', 'slug']]
             for i in context_var:
-                #print('i;',  i)
                 count += count
                 field_value = getattr(Fungi_attribute, i.name, None)
-                #print('fields_value@@@@@@@@@@@@@@@', field_value)
-                #print('field_value-------------------;',  i,field_value)
                 if field_value == None:
                     field_value = 'NoData'
                 if field_value == 'NoData' or field_value == 0.00 or field_value == 'no comments' or field_value == 'NoData' or field_value == 0 or field_value == '0':
-                    #print('fields_value+++++', field_value)
                     DP = False
                 else:
                     DP = 'True'
-                    #print('fields_value######', field_value)
                     break
-                #print('DP:', DP)
             return DP
 
         #retrieving user id's to get filter preferences
@@ -103,7 +51,7 @@ class FungiDetail(DetailView):
             UserShowSettings = Show.objects.get(user_id=U.id)
 
         #LINKS
-        RetrievedObjects = NetLinks.objects.filter(Fungi_id= self.object).distinct()
+        RetrievedObjects = NetLinks.objects.filter(Fungi_id= self.object).distinct().order_by('OrderToDisplay')
         if RetrievedObjects:
             context['NetLinks'] = RetrievedObjects
 
@@ -125,12 +73,18 @@ class FungiDetail(DetailView):
                     if i.Detail == "Habitat":
                         HabitatSourcesList.append(i.Source)
                 context['HabitatSourcesList'] = HabitatSourcesList
+                #print('context....RetrievedObjects.Associations:::', RetrievedObjects.Associations)
+                #print('context....Associations::::', context['Associations'])
+
 
                 if RetrievedObjects.Associations == 'NoData':
-                    context['Associations'] = InsertLinks(RetrievedObjects.Associations)
+                   context['Associations'] = RetrievedObjects.Associations
                 else:
                     context['Associations'] = InsertLinks(RetrievedObjects.Associations)[0]
                     context['AssociationsLinks'] = InsertLinks(RetrievedObjects.Associations)[1]
+                    #print('context....Associations::::', context['Associations'])
+
+                #print('context....RetrievedObjects.AssociationsXXX:::', RetrievedObjects.Associations)
 
                 context['Ph'] = RetrievedObjects.Ph
 
@@ -145,6 +99,15 @@ class FungiDetail(DetailView):
                 else:
                     context['Substrate'] = InsertLinks(RetrievedObjects.Substrate)[0]
                     context['SubstrateLinks'] = InsertLinks(RetrievedObjects.Substrate)[1]
+                    #print('context....Substrate::::', context['Substrate'])
+
+                #print('context....RetrievedObjects.SubstrateXXXXXX:::', RetrievedObjects.Substrate)
+
+                if RetrievedObjects.Environment == 'NoData':
+                    context['Environment'] = RetrievedObjects.Environment
+                else:
+                    context['Environment'] = InsertLinks(RetrievedObjects.Environment)[0]
+                    context['EnvironmentLinks'] = InsertLinks(RetrievedObjects.Environment)[1]
 
                 if RetrievedObjects.Comments == 'no comments':
                     context['HabitatComments'] = RetrievedObjects.Comments
@@ -152,29 +115,34 @@ class FungiDetail(DetailView):
                     context['HabitatComments'] = InsertLinks(RetrievedObjects.Comments)[0]
                     context['HabitatCommentsLinks'] = InsertLinks(RetrievedObjects.Comments)[1]
 
-
                 context['ShowHabitatFlag'] = 'Yes'
                 context['DataToDisplay'] = True
             else:
                 context['ShowHabitatFlag'] = 'No'
 
+            #print('context....Associations::::',  context['Associations'])
+
         #FUNGI COMMENTS
-        #print('self.object. FungiComments', self.object)
+        print('self.object. FungiComments', self.object)
         FungiCommentsSourcesList = []
         PID = FungiComments.objects.get(Fungi_id= self.object)
-        print('PID, FungiComments: ', PID)
-        print('DataPresent(PID)11111111', DataPresent(PID))
+        #print('PID, FungiComments: ', PID)
+        #print('DataPresent(PID)11111111', DataPresent(PID))
         if DataPresent(PID):
-            #print('DataPresent(PID)2222222222', DataPresent(PID))
+            print('DataPresent(PID)2222222222', DataPresent(PID))
             context['FungiCommentsFlag'] = 'Yes'
             #print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
             if UserShowSettings.ShowFungiComments:
                 RetrievedObjects = FungiComments.objects.get(Fungi_id= self.object)
-                #print('RetrievedObjects:', RetrievedObjects)
+                print('RetrievedObjects:', RetrievedObjects)
                 #print('Fungi_id:::', Fungi.id)
                 for i in DetailSources.objects.filter(Fungi_id= self.object):
-                    if i.Detail == "FungiComments":
+                    print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', i.Detail)
+                    #print('iiiiiiiiiiiiiii', i)
+                    #if i.Detail == "FungiComments":
+                    if i.Detail == "Comments":    
                         FungiCommentsSourcesList.append(i.Source)
+                        #print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', i.Detail)
                 context['FungiCommentsSourcesList'] = FungiCommentsSourcesList
                 #print('FungiComments, RetrievedObjects', RetrievedObjects)
 
@@ -353,11 +321,18 @@ class FungiDetail(DetailView):
                     context['CapColour'] = InsertLinks(RetrievedObjects.Colour)[0]
                     context['CapColourLinks'] = InsertLinks(RetrievedObjects.Colour)[1]
 
-                if RetrievedObjects.ShapeDescription == 'NoData':
-                    context['CapShapeDescription'] = RetrievedObjects.ShapeDescription
+                #if RetrievedObjects.ShapeDescription == 'NoData':
+                #   context['CapShapeDescription'] = RetrievedObjects.ShapeDescription
+                #else:
+                #   context['CapShapeDescription'] = InsertLinks(RetrievedObjects.ShapeDescription)[0]
+                #   context['CapShapeDescriptionLinks'] = InsertLinks(RetrievedObjects.ShapeDescription)[1]
+
+
+                if RetrievedObjects.Shape == 'NoData':
+                    context['CapShape'] = RetrievedObjects.Shape
                 else:
-                    context['CapShapeDescription'] = InsertLinks(RetrievedObjects.ShapeDescription)[0]
-                    context['CapShapeDescriptionLinks'] = InsertLinks(RetrievedObjects.ShapeDescription)[1]
+                    context['CapShape'] = InsertLinks(RetrievedObjects.Shape)[0]
+                    context['CapShapeLinks'] = InsertLinks(RetrievedObjects.Shape)[1]
 
                 if RetrievedObjects.Rim == 'NoData':
                     context['CapRim'] = RetrievedObjects.Rim
@@ -365,11 +340,11 @@ class FungiDetail(DetailView):
                     context['CapRim'] = InsertLinks(RetrievedObjects.Rim)[0]
                     context['CapRimLinks'] = InsertLinks(RetrievedObjects.Rim)[1]
 
-                if RetrievedObjects.RimDescription == 'NoData':
-                    context['CapRimDescription'] = RetrievedObjects.RimDescription
-                else:
-                    context['CapRimDescription'] = InsertLinks(RetrievedObjects.RimDescription)[0]
-                    context['CapRimDescriptionLinks'] = InsertLinks(RetrievedObjects.RimDescription)[1]
+                #if RetrievedObjects.RimDescription == 'NoData':
+                #    context['CapRimDescription'] = RetrievedObjects.RimDescription
+                #else:
+                #   context['CapRimDescription'] = InsertLinks(RetrievedObjects.RimDescription)[0]
+                #   context['CapRimDescriptionLinks'] = InsertLinks(RetrievedObjects.RimDescription)[1]
 
                 if RetrievedObjects.CapTexture == 'NoData':
                     context['CapTexture'] = RetrievedObjects.CapTexture
@@ -377,11 +352,11 @@ class FungiDetail(DetailView):
                     context['CapTexture'] = InsertLinks(RetrievedObjects.CapTexture)[0]
                     context['CapTextureLinks'] = InsertLinks(RetrievedObjects.CapTexture)[1]
 
-                if RetrievedObjects.CapTextureDescription == 'NoData':
-                    context['CapTextureDescription'] = RetrievedObjects.CapTextureDescription
-                else:
-                    context['CapTextureDescription'] = InsertLinks(RetrievedObjects.CapTextureDescription)[0]
-                    context['CapTextureDescriptionLinks'] = InsertLinks(RetrievedObjects.CapTextureDescription)[1]
+                #if RetrievedObjects.CapTextureDescription == 'NoData':
+                #   context['CapTextureDescription'] = RetrievedObjects.CapTextureDescription
+                #else:
+                #   context['CapTextureDescription'] = InsertLinks(RetrievedObjects.CapTextureDescription)[0]
+                #    context['CapTextureDescriptionLinks'] = InsertLinks(RetrievedObjects.CapTextureDescription)[1]
 
                 if RetrievedObjects.BruiseColour == 'NoData':
                     context['CapBruiseColour'] = RetrievedObjects.BruiseColour
@@ -717,6 +692,7 @@ class FungiDetail(DetailView):
                 for i in DetailSources.objects.filter(Fungi_id= self.object):
                     if i.Detail == "Flesh":
                         FleshSourcesList.append(i.Source)
+                        print('SOURCE',i.Source)
                 context['FleshSourcesList'] = FleshSourcesList
 
                 if RetrievedObjects.FleshCapColour == 'NoData':
@@ -783,9 +759,8 @@ class FungiDetail(DetailView):
                 context['StatusData'] = RetrievedObjects.StatusData
                 context['WhereFound'] = RetrievedObjects.WhereFound
                 context['StatusComments'] = RetrievedObjects.StatusComments
-                context['UKOccurences'] = int(RetrievedObjects.UKOccurences)
-                context['RecordedInUK'] = RetrievedObjects.RecordedInUK
                 context['ShowStatusFlag'] = 'Yes'
+
             else:
                 context['ShowStatusFlag'] = 'No'
         else:
@@ -829,22 +804,25 @@ class FungiDetail(DetailView):
                         CuisineSourcesList.append(i.Source)
                 context['CuisineSourcesList'] = CuisineSourcesList
                 #print('CuisineSourcesList-9999', CuisineSourcesList)
+                #context['FleshComments'] = InsertLinks(RetrievedObjects.Comments)[0]
                 context['PoisonType'] = RetrievedObjects.PoisonType
                 context['CulinaryRating'] = RetrievedObjects.CulinaryRating
                 context['Odour']= RetrievedObjects.Odour
                 context['Taste'] = RetrievedObjects.Taste
-                context['CuisineComments'] = RetrievedObjects.Comments
+                context['CuisineComments'] = InsertLinks(RetrievedObjects.Comments)[0]
+                context['CuisineCommentsLinks'] = InsertLinks(RetrievedObjects.Comments)[1]
                 context['ShowCuisineFlag'] = 'Yes'
             else:
                 context['ShowCuisineFlag'] = 'No'
         else:
             context['ShowCuisineFlag'] = 'No'
 
-
+        #print('context....Associations::::', context['Associations'])
+        #print('context....Substrate::::', context['Substrate'])
         if U.is_superuser:
             #print('User is superuser')
             context['DataToDisplay'] = True
-        print('context[DataToDisplay]',context['DataToDisplay'])
+
 
         return context
 

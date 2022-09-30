@@ -9,12 +9,13 @@ from django import forms
 from fungi.forms import UserRegisterForm
 from django.views import View
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import UpdateView
 
 from django.contrib.auth.models import AnonymousUser
 
 from django.forms import modelformset_factory, inlineformset_factory
 #from .models import Fungi
-from fungi.forms import ProductForm, ProductMetaInlineFormset
+#from fungi.forms import ProductForm, ProductMetaInlineFormset
 
 #from fungi.forms import FungiLatinSynomymsFormset
 from fungi.forms import *
@@ -69,7 +70,7 @@ def AllFungi(request):
 
     #Show or don't show non-UK Species and/or Macromycetes
     FungiToRender = FungiToSearch(Fungi, UserShowSettings.ShowOnlyUKOccurences, UserShowSettings.ShowMacromycetes)
-
+    print('FUNGI', Fungi)
     context = {
         'fungis' : FungiToRender[0],
         'fungicount' : FungiToRender[1],
@@ -183,12 +184,21 @@ class FungiDetailView(DetailView):
     model = Fungi
     template_name = 'Fungi_detail.html'
 
+class FungiEditView(UpdateView):
+    model = Fungi
+    template_name = 'fungi_edit.html'
+    #fields ='__all__'
+    fields = ['CommonName', 'LatinName','Group','UKSpecies','Macromycetes','Comments']
+        
+
 
 class FungiCreateView(CreateView):
     model = Fungi
     template_name = 'fungi_create.html'
-    fields = ['CommonName','LatinName','Group']
-
+    #fields = ['CommonName','LatinName','Group']
+    #exclude = ['slug']
+    #fields ='__all__'
+    fields = ['CommonName', 'LatinName', 'Group','UKSpecies','Macromycetes','Comments']
     def form_valid(self, form):
 
         messages.add_message(
@@ -218,6 +228,22 @@ class GlossaryTermView(CreateView):
 
 
 #class GlossaryTermUpdateView(UpdateView):
+
+class FungiView(CreateView):
+    model = Fungi
+    template_name = 'fungi_edit2.html'
+    fields ='__all__'
+
+    def form_valid(self, form):
+
+        messages.add_message(
+            self.request, 
+            messages.SUCCESS,
+            'The fungi has been edited'
+        )
+
+        return super().form_valid(form)
+
 
 
 class FungiLatinSynomymsView(SingleObjectMixin, FormView):
@@ -281,6 +307,38 @@ class FungiLatinSynomymsDeleteView(SingleObjectMixin, FormView):
     def get_success_url(self):
         #return reverse('FungiDetail-Page', kwargs={'pk': self.object.pk})
         return reverse('FungiDetail-Page',kwargs={'slug':self.object.slug})
+'''
+class FungiEditView(SingleObjectMixin, FormView):
+
+    model = Fungi
+    template_name = 'fungi_edit.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Fungi.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Fungi.objects.all())
+        return super().post(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        return FungiFormset(**self.get_form_kwargs(), instance=self.object)
+
+    def form_valid(self, form):
+        form.save()
+
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            'Changes were saved.'
+        )
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        #return reverse('FungiDetail-Page', kwargs={'pk': self.object.pk})
+        return reverse('FungiDetail-Page',kwargs={'slug':self.object.slug})
+'''
 
 class FungiHabitatEditView(SingleObjectMixin, FormView):
 
@@ -730,9 +788,9 @@ class FungiCommentsEditView(SingleObjectMixin, FormView):
 
         return HttpResponseRedirect(self.get_success_url())
 
-        def get_success_url(self):
-            #return reverse('FungiDetail-Page', kwargs={'pk': self.object.pk}) 
-            return reverse('FungiDetail-Page',kwargs={'slug':self.object.slug})
+    def get_success_url(self):
+        #return reverse('FungiDetail-Page', kwargs={'pk': self.object.pk}) 
+        return reverse('FungiDetail-Page',kwargs={'slug':self.object.slug})
 
 
 

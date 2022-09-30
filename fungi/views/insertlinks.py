@@ -13,18 +13,19 @@ def InsertLinks(Text):
 
     #loop through Glossary, if glossary term in text from DB get start/end indexes of term in text
     for glossaryterm in glossary:
-        lcstr = glossaryterm.Term.casefold()
+        print('TEXT',Text)
+        wordstosearch = Text.split()
         try:
-            if Text.find(glossaryterm.Term) > -1:
+            if glossaryterm.Term in wordstosearch:
                 glossarytermfound = True
                 index1 = Text.index(glossaryterm.Term)
                 index2 = index1+(len(glossaryterm.Term))
                 termstarts.append(index1)
                 termends.append(index2-1)
-            elif Text.find(lcstr) > -1:
+            elif  glossaryterm.Term.casefold() in wordstosearch:
                 glossarytermfound = True
-                index1 = Text.index(lcstr)
-                index2 = index1+(len(lcstr))
+                index1 = Text.index( glossaryterm.Term.casefold())
+                index2 = index1+(len( glossaryterm.Term.casefold()))
                 termstarts.append(index1)
                 termends.append(index2-1)
         except ValueError:
@@ -78,8 +79,6 @@ def InsertLinks(Text):
             texts.append(terms[-1]+1)
             texts.append(len(Text))
 
-
-
         allvars = terms+texts
         allvars.sort()
 
@@ -98,11 +97,12 @@ def InsertLinks(Text):
                     termtext = Text[terms[count_a]:terms[count_b]+1]
                     LinksInserted['link'+str(count_c)] = [reverse('glossary_entry', args=[termtext]),termtext]
                 except IndexError:
-                    print('Reached end of terms')                            
+                    print('Reached end of terms')
 
                 count_a += 2
                 count_b += 2
                 count_c += 1
+
         else:
             count_a = 0
             count_b = 1
@@ -123,5 +123,5 @@ def InsertLinks(Text):
 
     else:
         LinksInserted = Text
-    
+
     return [LinksInserted, glossarytermfound]

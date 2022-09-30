@@ -1,4 +1,4 @@
-#from fungi.models import *
+from fungi.models import *
 
 
 def FungiChoices():
@@ -18,6 +18,18 @@ def FungiChoices2():
 		data = (i.id, i.CommonName+', '+str(i.id))
 		FCL2.append(data)
 	return FCL2
+
+#from fungi.models import *
+def LinkChoicesNames():
+	LinkChoices =[]
+	FChoices = NetLinks.objects.all().distinct()
+	for i in Fchoices:
+		data=(i.Website)
+		LinkChoices.append(data)
+	return LinkChoices
+
+
+
 
 ReticulationChoices= [
 	("initial", ""),
@@ -57,6 +69,7 @@ GillsMilkChoices = [
 	]	
 
 
+
 MonthFoundChoices= [
 	("initial", ""),
     ("January" , "January"),
@@ -71,6 +84,10 @@ MonthFoundChoices= [
 	("October" , "October"),
 	("November" , "November"),
 	("December" , "December"),
+	("Spring","Spring"),
+	("Summer", "Summer"),
+	("Autumn","Autumn"),
+	("Winter","Winter"),
 	("Other", "Other")
     ]
 

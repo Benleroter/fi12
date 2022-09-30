@@ -19,7 +19,7 @@ def FieldsToDisplay(UserSearchFields):
 
     if UserSearchFields.CommonName:
         fieldsToDisplay['CommonName'] = forms.CharField(required=False, max_length=255, label='Common Name', initial='cn')
-        print('fieldsToDisplay:::::::::::',fieldsToDisplay)
+        #print('fieldsToDisplay:::::::::::',fieldsToDisplay)
 
     if UserSearchFields.LatinName:
         fieldsToDisplay['LatinName'] = forms.CharField(required=False, max_length=255, label='Latin Name', initial='')
@@ -36,11 +36,14 @@ def FieldsToDisplay(UserSearchFields):
     if UserSearchFields.HabitatSubstrate:
         fieldsToDisplay['HabitatSubstrate'] = forms.CharField(required=False, max_length=255, label='Substrate',initial='')
 
+    if UserSearchFields.HabitatEnvironment:
+        fieldsToDisplay['HabitatEnvironment'] = forms.CharField(required=False, max_length=255, label='Environment',initial='')
+
     if UserSearchFields.HabitatSoil:
         fieldsToDisplay['HabitatSoil'] = forms.CharField(required=False, max_length=255, label='Soil type', initial='')
 
     if UserSearchFields.MonthFound:
-        fieldsToDisplay['MonthFound'] = forms.ChoiceField(choices = MonthFoundChoices, required=False, label='Month Found',initial='month')
+        fieldsToDisplay['MonthFound'] = forms.ChoiceField(choices = MonthFoundChoices, required=False, label='Month/Season Found',initial='month')
 
     if UserSearchFields.CapColour:
         fieldsToDisplay['CapColour'] = forms.CharField(required=False, max_length=255, label='Cap Colour', initial='')
@@ -109,13 +112,13 @@ def FieldsToDisplay(UserSearchFields):
         fieldsToDisplay['PoreBruiseColour'] = forms.CharField(required=False, max_length=255, label='Pore Bruise Colour', initial='')
 
     if UserSearchFields.TubeColour:
-        fieldsToDisplay['TubeColour'] = forms.CharField(required=False, max_length=255, label='Latin Name', initial='')
+        fieldsToDisplay['TubeColour'] = forms.CharField(required=False, max_length=255, label='Tube Colour', initial='')
 
     if UserSearchFields.TubeShape:
         fieldsToDisplay['TubeShape'] = forms.CharField(required=False, max_length=255, label='Tube Shap', initial='')
 
     if UserSearchFields.TubeBruiseColour:
-        fieldsToDisplay['TubeBruiseColour'] = forms.CharField(required=False, max_length=255, label='Tube TubeBruiseColour Colour', initial='')
+        fieldsToDisplay['TubeBruiseColour'] = forms.CharField(required=False, max_length=255, label='Tube Bruise Colour', initial='')
 
     if UserSearchFields.PoreMilk:
         fieldsToDisplay['PoreMilk'] = forms.ChoiceField(choices =PoresMilkChoices, required=False, label='Pore Milk', initial='')

@@ -18,12 +18,13 @@ class FruitingBodyUpdate(UpdateView):
 	model = FruitingBody
 	fields = [
 		"Colour", 
-		"ColourDescription",
-		"ShapeDescription", 
+		#"ColourDescription",
+		#"ShapeDescription",
+		"Shape",
 		"Rim", 
-		"RimDescription", 
+		#"RimDescription",
 		"CapTexture",
-		"CapTextureDescription",
+		#"CapTextureDescription",
 		"BruiseColour", 
 		"CutColour",
 		"WidthMin",
@@ -38,7 +39,8 @@ class HabitatUpdate(UpdateView):
 		"Associations",
 		"Ph",
 		"Soil",
-		"Substrate", 
+		"Substrate",
+		"Environment",
 		"Comments" 
 		]
 	template_name = 'habitat_form.html'
@@ -76,6 +78,7 @@ class StipeUpdate(UpdateView):
 		"ReticulationDescription",	
 		"Base",
 		"BaseDescription",
+		"Texture",
 		"TextureDescription",
 		"Ring", 
 		"RingDescription", 
@@ -177,8 +180,6 @@ class StatusUpdate(UpdateView):
 	fields = [
 		"StatusData", 
 		"WhereFound", 
-		"RecordedInUK", 
-		"UKOccurences",
 		"StatusComments"
 ]
 	template_name = 'status_form.html'

@@ -14,14 +14,18 @@ def Search(request):
     UserSearchFields = ShowSearchFields.objects.get(user_id= request.user)
     if request.method == 'POST':
         fieldsToDisplay = FieldsToDisplay(UserSearchFields)
-        print('fieldsToDisplay--: ', fieldsToDisplay)
+        #print('fieldsToDisplay--: ', fieldsToDisplay)
         DynamicSearchForm = type('DynamicSearchForm', (UserSearchForm,), fieldsToDisplay)
         form = DynamicSearchForm(request.POST)
         if form.is_valid():
             QParams = GetParamsFromForm(form)
+            print('QParams', QParams)
             QParams = EditedQParams(QParams)
+            print('EditedQParams', QParams)
             FungiFound = RunSearch(QParams)
-            FungiFoundCount = len(FungiFound)
+            print('FungiFound0:::', FungiFound[0])
+            print('FungiFound1:::', FungiFound[1])
+            FungiFoundCount = len(FungiFound[0])
             if FungiFoundCount== 0:
                 QParams2 = copy.deepcopy(QParams)
                 for key, value in QParams2.items() :
@@ -37,7 +41,8 @@ def Search(request):
                 return render(request, 'nosearchresults.html', context)
                 
             context = {
-                'search_fungi_results': FungiFound,
+                'search_fungi_results': FungiFound[0],
+                'synonymlist':  FungiFound[1],
                 'resultscount' : FungiFoundCount,
             }
             

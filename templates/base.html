@@ -4,9 +4,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <title>Fungi Identifier</title>
   <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/bootstrap.min.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/styles2.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'fungi_css/styles2.css?v=1.1' %}">
+
   <!--<link rel="stylesheet" type="text/css" href="{% static 'fungi_css/main.css' %}">-->
   <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -100,7 +103,7 @@
                   </a>
                 </li>
 
-                 <li>
+                <li>
                   <a href="{% url 'search-fungi' %}">
                     <span><img src="/media/images/search-8909.png" alt=""></span>
                     <span class="text">Search</span>
@@ -146,7 +149,7 @@
                 <li>
                   <a href="{% url 'Links-Page' %}">
                     <span><img src="/media/images/link-chain-10475.png" alt=""></span>
-                    <span class="text">Links</span>
+                    <span class="text">Links & Notes</span>
                   </a>
                 </li>
 

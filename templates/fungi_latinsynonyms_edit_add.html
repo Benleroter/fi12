@@ -3,16 +3,15 @@
 {% block header %}
   <h1 style="color:white;">
     {% if CulinaryRating == "Deadly" or  CulinaryRating == "dangerous" %}
-        <img src= "/media/images/icons8-skull-and-crossbones-48.png"> 
+        <img src= "/media/images/icons8-skull-and-crossbones-48.png">
     {% endif %}
     {% if user.show.ShowLatinNames %}
             {{fungi.CommonName}}, <em>{{fungi.LatinName}}</em>, id: {{fungi.id}}
     {% else %}
             {{fungi.CommonName}}
     {% endif %}
-    {{fungi.UKOccurences}}
-    {% if UKOccurences > 0 %}
-        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png"> 
+    {% if fungi.UKSpecies == "Yes"%}
+        <img src= "/media/images/pngfind.com-english-flag-png-6458760.png">
     {% endif %}
 
   </h1>
@@ -32,13 +31,13 @@
     {{ form.non_form_errors }}
     <div class="detail">
       <h3>
-      <legend class="sub-content" >Latin Synonyms - editkkkk</legend>
+      <legend class="sub-content" >Latin Synonyms - edit</legend>
      </h3>
     {% for LatinSynonym in form.forms %}
-    
+
       <h4>
        {% if LatinSynonym.instance.id %}
-   
+
         {% else %}
           {% if form.forms|length > 1 %}
             Add another Latin Synonym
@@ -47,12 +46,22 @@
           {% endif %}
         {% endif %}
       </h4>
-      {% for hidden_field in book_form.hidden_fields %}
+      {% for hidden_field in LatinSynonym.hidden_fields %}
         {{ hidden_field.errors }}
         {{ hidden_field }}
       {% endfor %}
+       {{ LatinSynonym.non_field_errors }}
        <div class="sub-content" >
-        {{ LatinSynonym|crispy}}
+            <h4>
+              <div class="form-row">
+                  <div class="form-group col-md-9 mb-0">
+                      {{ LatinSynonym.LatinSynonym |as_crispy_field }}
+                  </div>
+                  <div class="form-group col-md-3 mb-0">
+                      {{ LatinSynonym.LatinSynonymSource |as_crispy_field }}
+                  </div>
+              </div>
+            </h4>
       </div>
     {% endfor %}
     <p>

@@ -48,20 +48,20 @@ class ProductMetaForm(forms.ModelForm):
         #fields = ('LatinSynonym',)
 
 
-ProductMetaInlineFormset = inlineformset_factory(
-    Fungi,
-    LatinSynonyms,
-    form=ProductMetaForm,
-    extra=5,
-    # max_num=5,
-    # fk_name=None,
-    # fields=None, exclude=None, can_order=False,
-    # can_delete=True, max_num=None, formfield_callback=None,
-    # widgets=None, validate_max=False, localized_fields=None,
-    # labels=None, help_texts=None, error_messages=None,
-    # min_num=None, validate_min=False, field_classes=None
-)
+class FungiForm(forms.ModelForm):
+    class Meta:
+        model = Fungi
+        fields = "__all__"
 
+
+FungiFormset = inlineformset_factory(
+    Fungi,
+    Habitat,
+    extra=0,
+    labels='',
+    can_delete=False,
+    fields='__all__'
+    )
 
 
 FungiHabitatFormset = inlineformset_factory(
@@ -213,7 +213,7 @@ FungiLatinSynomymsFormset = inlineformset_factory(
     extra=1,
     labels='',
     can_delete=False,
-    fields=('LatinSynonym',)
+    fields=('LatinSynonym','LatinSynonymSource')
     )
 
 FungiLatinSynomymsDeleteFormset = inlineformset_factory(
@@ -263,6 +263,14 @@ FungiCommonNamesDeleteFormset = inlineformset_factory(
 
 GlossaryFormset = modelformset_factory(
     Glossary,
+    extra=1,
+    labels='',
+    can_delete=True,
+    fields='__all__'
+    )
+
+FungiFormset = modelformset_factory(
+    Fungi,
     extra=1,
     labels='',
     can_delete=True,

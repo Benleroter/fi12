@@ -9,27 +9,44 @@
      </h1>
 
     {% for fungi in search_fungi_results %}
-      <article class="media content-section">
+      {% if fungi.id in synonymlist %}
+      <article class="media content-section-orange">
         <div class="media-body">
           <div class="article-metadata">
             <h2>
+                <h5><em>synonym;</em></h5>
                   <a class="article-title" href="{% url 'FungiDetail-Page' fungi.id %}" >
+
                   <p class="article-content"> <h2>{{fungi.CommonName}}, <em>{{fungi.LatinName}}</em>, Group: {{fungi.Group}}</h2></p>
                 </a>
             </h2>
           </div>
         </div>
-      </article>                  
+      </article>
+
+      {% else %}
+
+      <article class="media content-section">
+        <div class="media-body">
+          <div class="article-metadata">
+            <h2>
+                  <a class="article-title" href="{% url 'FungiDetail-Page' fungi.id %}" >
+                      {%  if  fungi.CommonName == 'Common Name'%}
+                          <p class="article-content"> <h2>No Common Name, <em>{{fungi.LatinName}}</em>, Group: {{fungi.Group}}</h2></p>
+                      {%  else %}
+                          <p class="article-content"> <h2>{{fungi.CommonName}}, <em>{{fungi.LatinName}}</em>, Group: {{fungi.Group}}</h2></p>
+                      {%  endif %}
+                </a>
+            </h2>
+          </div>
+        </div>
+      </article>
+      {% endif %}
     {% endfor %}
 
   </h1>
 
-
-
-
-
-
-{% endblock search_results %}
+  {% endblock search_results %}
 
 
 
